@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: claimassist
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/claimassist}
+    username: ${SPRING_DATASOURCE_USERNAME:claimassist}
+    password: ${SPRING_DATASOURCE_PASSWORD:change_me}
+    driver-class-name: org.postgresql.Driver
+  ai:
+    ollama:
+      base-url: ${SPRING_AI_OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${CLAIMASSIST_CHAT_MODEL:llama3.1}
+      embedding:
+        options:
+          model: ${CLAIMASSIST_EMBED_MODEL:nomic-embed-text}
+    vectorstore:
+      pgvector:
+        # Schema initialization deferred to Stage 1 (explicit Flyway migration).
+        initialize-schema: false
+
+claimassist:
+  model:
+    chat: ${CLAIMASSIST_CHAT_MODEL:llama3.1}
+    embedding: ${CLAIMASSIST_EMBED_MODEL:nomic-embed-text}
+  chunk:
+    size: 512
+    overlap: 50
+  retrieval:
+    top-k: 5
+    threshold: 0.0
+    rrf-k: 60
+  guardrail:
+    grounding-threshold: 0.8
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: claimassist
+
+info:
+  app:
+    name: ClaimAssist
+    description: Enterprise RAG service for insurance claim adjusters
+    stage: Stage 0 — Scaffolding

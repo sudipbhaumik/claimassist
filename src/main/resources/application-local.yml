@@ -1,0 +1,11 @@
+# Local profile — activated when SPRING_PROFILES_ACTIVE=local (docker-compose default).
+# Shows full health details and more verbose logging for local development.
+management:
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.claimassist: DEBUG
+    org.springframework.ai: DEBUG

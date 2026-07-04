@@ -1,0 +1,11 @@
+# Test-scoped overrides.
+# Testcontainers provides the real Postgres datasource via @ServiceConnection.
+# PgVectorStore schema initialization is enabled here so the vector extension
+# (enabled by V1 migration) allows the auto-configuration to succeed.
+spring:
+  ai:
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+    ollama:
+      base-url: http://localhost:11434
