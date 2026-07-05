@@ -34,6 +34,9 @@ claimassist:
   chunk:
     size: 512
     overlap: 50
+    min-chunk-size-chars: 50
+    min-chunk-length-to-embed: 10
+    max-num-chunks: 10000
   retrieval:
     top-k: 5
     threshold: 0.0

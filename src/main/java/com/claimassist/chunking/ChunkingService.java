@@ -25,12 +25,13 @@ public class ChunkingService {
   private final TokenTextSplitter splitter;
 
   public ChunkingService(ClaimAssistProperties props) {
+    ClaimAssistProperties.Chunk chunk = props.getChunk();
     this.splitter =
         TokenTextSplitter.builder()
-            .withChunkSize(props.getChunk().getSize())
-            .withMinChunkSizeChars(50)
-            .withMinChunkLengthToEmbed(10)
-            .withMaxNumChunks(10_000)
+            .withChunkSize(chunk.getSize())
+            .withMinChunkSizeChars(chunk.getMinChunkSizeChars())
+            .withMinChunkLengthToEmbed(chunk.getMinChunkLengthToEmbed())
+            .withMaxNumChunks(chunk.getMaxNumChunks())
             .withKeepSeparator(true)
             .build();
   }

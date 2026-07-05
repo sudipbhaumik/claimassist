@@ -23,12 +23,15 @@ public class DocumentParser {
   private static final Logger log = LoggerFactory.getLogger(DocumentParser.class);
 
   public String parse(byte[] rawContent, String contentType) {
+    // For "claim_note" content, the raw bytes are already plain text. No Tika parsing is needed.
     if ("claim_note".equals(contentType)) {
       return new String(rawContent, StandardCharsets.UTF_8);
     }
     try {
+      // For all other content types, use Tika to parse the document. Tika auto-detects the type from magic bytes.
       TikaDocumentReader reader = new TikaDocumentReader(new ByteArrayResource(rawContent));
       List<Document> docs = reader.read();
+      // Join all document segments into a single string, separated by double newlines. Filter out any null or blank segments.
       String text =
           docs.stream()
               .map(Document::getText)

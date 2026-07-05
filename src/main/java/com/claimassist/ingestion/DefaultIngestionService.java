@@ -57,7 +57,9 @@ public class DefaultIngestionService implements IngestionService {
     try {
       log.info("ingestion.start sourceId={} contentType={}", request.sourceId(), contentType);
 
+      // Parse and normalize the document. Parsing is content-type aware; normalization is not.
       String parsed = parser.parse(request.rawContent(), contentType);
+      // Normalization is content-type agnostic; it is a pure text transformation.
       String normalized = normalizer.normalize(parsed);
 
       if (normalized.isBlank()) {
@@ -65,10 +67,13 @@ public class DefaultIngestionService implements IngestionService {
         return new IngestionResult(request.sourceId(), 0, 0, IngestionStatus.SKIPPED);
       }
 
+      // Compute a SHA-256 hash of the normalized text. This is used for deduplication and metadata.
       String docHash = sha256(normalized);
+
       Map<String, Object> baseMetadata =
           buildMetadata(request.metadata(), request.sourceId(), docHash);
 
+      // Chunk the normalized text and store each chunk. The chunker is content-type aware.
       List<TextChunk> chunks = chunker.chunk(normalized, baseMetadata);
 
       int created = 0;

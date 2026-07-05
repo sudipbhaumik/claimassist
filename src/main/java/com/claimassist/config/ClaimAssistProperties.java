@@ -75,6 +75,9 @@ public class ClaimAssistProperties {
   public static class Chunk {
     @Positive private int size = 512;
     @PositiveOrZero private int overlap = 50;
+    @Positive private int minChunkSizeChars = 50;
+    @Positive private int minChunkLengthToEmbed = 10;
+    @Positive private int maxNumChunks = 10_000;
 
     public int getSize() {
       return size;
@@ -90,6 +93,30 @@ public class ClaimAssistProperties {
 
     public void setOverlap(int overlap) {
       this.overlap = overlap;
+    }
+
+    public int getMinChunkSizeChars() {
+      return minChunkSizeChars;
+    }
+
+    public void setMinChunkSizeChars(int minChunkSizeChars) {
+      this.minChunkSizeChars = minChunkSizeChars;
+    }
+
+    public int getMinChunkLengthToEmbed() {
+      return minChunkLengthToEmbed;
+    }
+
+    public void setMinChunkLengthToEmbed(int minChunkLengthToEmbed) {
+      this.minChunkLengthToEmbed = minChunkLengthToEmbed;
+    }
+
+    public int getMaxNumChunks() {
+      return maxNumChunks;
+    }
+
+    public void setMaxNumChunks(int maxNumChunks) {
+      this.maxNumChunks = maxNumChunks;
     }
   }
 
