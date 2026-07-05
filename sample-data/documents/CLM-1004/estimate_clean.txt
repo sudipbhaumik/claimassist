@@ -1,0 +1,42 @@
+**AUTO DAMAGE REPAIR ESTIMATE (SYNTHETIC TEST DATA)**
+**Claim Number:** CLM-1004 | **Page 1 of 1**
+
+---
+
+# Vehicle Damage Repair Estimate
+
+**Claim ID:** CLM-1004
+**Policy ID:** POL-5501
+**Line of Business:** Auto
+**Date of Loss (DOL):** 2026-04-22
+**Estimate Date:** 2026-04-25
+
+## Damage Narrative
+
+On the **Date of Loss (DOL) of 2026-04-22**, the insured reported that while traveling on a public roadway, a piece of road debris was propelled into the front windshield by another vehicle. The impact resulted in a significant crack extending across the driver's field of vision. Based on the inspection performed on **2026-04-25**, the windshield damage is not considered repairable due to the crack length and location. No additional structural, body, or mechanical damage was observed during the visual assessment. The estimate below reflects the anticipated cost to restore the vehicle to its pre-loss condition.
+
+## Repair Estimate
+
+| Item      | Description                                                   |     Qty | Unit Cost |         Total |
+| --------- | ------------------------------------------------------------- | ------: | --------: | ------------: |
+| 1         | OEM-compatible windshield glass                               |       1 |   $485.00 |       $485.00 |
+| 2         | Windshield molding/seal kit                                   |       1 |    $48.00 |        $48.00 |
+| 3         | Urethane adhesive and installation materials                  |       1 |    $34.00 |        $34.00 |
+| 4         | Remove and install windshield (labor)                         | 2.5 hrs |    $95.00 |       $237.50 |
+| 5         | Advanced Driver Assistance System (ADAS) camera recalibration |       1 |   $210.00 |       $210.00 |
+| 6         | Shop supplies and disposal fees                               |       1 |    $18.50 |        $18.50 |
+| 7         | Final inspection and quality verification                     |  0.5 hr |    $95.00 |        $47.50 |
+| **TOTAL** |                                                               |         |           | **$1,080.50** |
+
+## Assessment Notes
+
+* Damage is consistent with a windshield impact caused by road debris.
+* Replacement is recommended instead of repair because the crack extends into the driver's primary viewing area.
+* No visible damage was identified to the hood, roof panel, A-pillars, mirrors, or front bumper during the inspection.
+* ADAS recalibration is included because windshield replacement may affect forward-facing camera alignment on equipped vehicles.
+* This estimate is intended solely as a preliminary repair cost assessment based on the observed damage at the time of inspection. Additional damage, if discovered during repair, may require a supplemental estimate.
+
+---
+
+**Repair Estimate - Synthetic Test Data Only**
+**Claim Number:** CLM-1004 | **Page 1 of 1**

@@ -1,0 +1,57 @@
+PROPERTY DAMAGE REPAIR ESTIMATE
+Claim Number: CLM-1003
+Page 1 of 1
+
+================================================================================
+ESTIMATE / DAMAGE ASSESSMENT
+============================
+
+Claim ID: CLM-1003
+Policy ID: POL-5503
+Line of Business: Property
+
+Date of Loss (DOL): 2026-03-05
+Estimate Date: 2026-03-10
+
+---
+
+## DAMAGE NARRATIVE
+
+The insured reported water intrusion into the basement area following an overflow
+event originating from a flooded floor drain on the DOL. Inspection confirmed
+standing water damage affecting flooring materials, lower wall sections, baseboards,
+and stored personal property. Moisture readings indicate elevated saturation in
+drywall and subfloor materials requiring removal and drying procedures.
+
+---
+
+## REPAIR ESTIMATE
+
+| Item | Description                                      |    Qty | Unit Cost |     Total |
+| ---- | ------------------------------------------------ | -----: | --------: | --------: |
+| 1    | Water extraction and initial cleanup             |      1 |   $450.00 |   $450.00 |
+| 2    | Industrial drying equipment (dehumidifiers/fans) | 3 days |   $120.00 |   $360.00 |
+| 3    | Basement carpet and padding removal              |      1 |   $780.00 |   $780.00 |
+| 4    | Drywall removal (lower 2 ft perimeter)           |      1 | $1,250.00 | $1,250.00 |
+| 5    | Mold prevention treatment application            |      1 |   $320.00 |   $320.00 |
+| 6    | Subfloor inspection and partial replacement      |      1 | $1,600.00 | $1,600.00 |
+| 7    | Debris removal and disposal fees                 |      1 |   $275.00 |   $275.00 |
+| 8    | Final sanitation and deodorization               |      1 |   $190.00 |   $190.00 |
+
+|      | **TOTAL ESTIMATED REPAIR COST**                  |            |           | **$5,225.00** |
+
+---
+
+## NOTES
+
+* Estimate is based on visible and accessible damage observed during initial
+  inspection on the DOL.
+* Additional hidden damage may be discovered after demolition and may require
+  supplemental repairs.
+* Drying times may vary depending on moisture levels within structural materials.
+* Final claim settlement is subject to policy terms, applicable exclusions,
+  coverage limits, and deductible requirements.
+
+---
+
+## Claim Number: CLM-1003                                              Page 1 of 1

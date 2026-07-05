@@ -1,0 +1,42 @@
+**AUTO DAMAGE REPAIR ESTIMATE**
+**Claim Number:** CLM-1001
+**Page 1 of 1**
+
+---
+
+# ESTIMATE / DAMAGE ASSESSMENT
+
+**Claim ID:** CLM-1001
+**Policy ID:** POL-5501
+**Line of Business:** Auto
+
+**Date of Loss (DOL):** 2026-02-10
+**Estimate Date:** 2026-02-15
+
+## Damage Narrative
+
+Following inspection of the covered vehicle, damage consistent with a rear-end collision was observed. The insured reported that the vehicle sustained impact to the rear while stopped in traffic on the DOL. Visible damage includes deformation of the rear bumper assembly, damage to the trunk lid, and associated cosmetic damage to adjacent panels. No structural frame damage was identified during this preliminary assessment; however, additional concealed damage may be identified during the repair process.
+
+---
+
+## Repair Estimate
+
+| Item | Description                                    |     Qty | Unit Cost |   Total |
+| ---- | ---------------------------------------------- | ------: | --------: | ------: |
+| 1    | Rear bumper cover replacement                  |       1 |   $650.00 | $650.00 |
+| 2    | Rear bumper reinforcement replacement          |       1 |   $325.00 | $325.00 |
+| 3    | Trunk lid replacement                          |       1 |   $875.00 | $875.00 |
+| 4    | Body labor (remove, install, align components) | 8.0 hrs |    $95.00 | $760.00 |
+| 5    | Refinish labor and paint materials             |       1 |   $540.00 | $540.00 |
+| 6    | Rear impact energy absorber replacement        |       1 |   $165.00 | $165.00 |
+| 7    | Trunk latch adjustment and alignment           |       1 |   $120.00 | $120.00 |
+
+| | **TOTAL ESTIMATED REPAIR COST** | | | **$3,435.00** |
+
+---
+
+### Notes
+
+* This estimate is based on visible damage identified during the initial inspection.
+* Additional repair costs may be incurred if hidden damage is discovered after disassembly.
+* Replacement parts of like kind and quality or equivalent components may be used where

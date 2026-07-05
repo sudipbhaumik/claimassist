@@ -1,0 +1,39 @@
+**ACME INSURANCE SERVICES**
+Claims Department
+1234 Insurance Plaza
+Anytown, ST 12345
+Phone: (555) 555-0100
+
+**Date:** 2026-04-23
+
+**To:**
+Daniel Foster
+
+**Subject: Claim Acknowledgement – Claim ID: CLM-1004**
+
+Dear Mr. Foster,
+
+Thank you for reporting your insurance claim. This letter acknowledges receipt of your claim, **Claim ID: CLM-1004**, and confirms that it has been assigned for review.
+
+To help us complete our evaluation as efficiently as possible, we request that you provide the following additional information, if available:
+
+* Photographs of the reported damage.
+* The date, time, and location of the incident, if not already provided in full.
+* Any repair estimates or invoices you have obtained.
+* Contact information for any witnesses, if applicable.
+
+Once we receive the requested information, we will continue our review and contact you if any further documentation is needed. Providing the requested materials promptly will help us process your claim without unnecessary delay.
+
+If you have any questions regarding your claim or need assistance submitting the requested information, please contact our Claims Department and reference **Claim ID: CLM-1004** in all correspondence.
+
+Thank you for your cooperation. We appreciate the opportunity to assist you throughout the claims process.
+
+Sincerely,
+
+**Karen Mills**
+Claims Adjuster
+ACME Insurance Services
+
+---
+
+**Reference:** CORR-CLM-1004-20260423
