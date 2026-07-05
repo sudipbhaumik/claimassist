@@ -1,6 +1,10 @@
 spring:
   application:
     name: claimassist
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 52MB
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -53,4 +57,3 @@ info:
   app:
     name: ClaimAssist
     description: Enterprise RAG service for insurance claim adjusters
-    stage: Stage 0 — Scaffolding
