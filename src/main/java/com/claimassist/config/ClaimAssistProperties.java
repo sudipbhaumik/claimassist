@@ -16,6 +16,7 @@ public class ClaimAssistProperties {
 
   @Valid private Model model = new Model();
   @Valid private Chunk chunk = new Chunk();
+  @Valid private Embed embed = new Embed();
   @Valid private Retrieval retrieval = new Retrieval();
   @Valid private Guardrail guardrail = new Guardrail();
 
@@ -33,6 +34,14 @@ public class ClaimAssistProperties {
 
   public void setChunk(Chunk chunk) {
     this.chunk = chunk;
+  }
+
+  public Embed getEmbed() {
+    return embed;
+  }
+
+  public void setEmbed(Embed embed) {
+    this.embed = embed;
   }
 
   public Retrieval getRetrieval() {
@@ -117,6 +126,27 @@ public class ClaimAssistProperties {
 
     public void setMaxNumChunks(int maxNumChunks) {
       this.maxNumChunks = maxNumChunks;
+    }
+  }
+
+  public static class Embed {
+    @Positive private int batchSize = 20;
+    @Positive private int expectedDimensions = 768;
+
+    public int getBatchSize() {
+      return batchSize;
+    }
+
+    public void setBatchSize(int batchSize) {
+      this.batchSize = batchSize;
+    }
+
+    public int getExpectedDimensions() {
+      return expectedDimensions;
+    }
+
+    public void setExpectedDimensions(int expectedDimensions) {
+      this.expectedDimensions = expectedDimensions;
     }
   }
 

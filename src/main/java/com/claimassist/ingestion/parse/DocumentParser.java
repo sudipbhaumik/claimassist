@@ -28,10 +28,12 @@ public class DocumentParser {
       return new String(rawContent, StandardCharsets.UTF_8);
     }
     try {
-      // For all other content types, use Tika to parse the document. Tika auto-detects the type from magic bytes.
+      // For all other content types, use Tika to parse the document. Tika auto-detects the type
+      // from magic bytes.
       TikaDocumentReader reader = new TikaDocumentReader(new ByteArrayResource(rawContent));
       List<Document> docs = reader.read();
-      // Join all document segments into a single string, separated by double newlines. Filter out any null or blank segments.
+      // Join all document segments into a single string, separated by double newlines. Filter out
+      // any null or blank segments.
       String text =
           docs.stream()
               .map(Document::getText)

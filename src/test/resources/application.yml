@@ -1,11 +1,9 @@
 # Test-scoped overrides.
 # Testcontainers provides the real Postgres datasource via @ServiceConnection.
-# PgVectorStore schema initialization is enabled here so the vector extension
-# (enabled by V1 migration) allows the auto-configuration to succeed.
+# Flyway (V1–V4) owns all schema: pgvector extension, document_chunks, HNSW index.
+# PgVectorStore inherits initialize-schema: false from main application.yml — no schema conflicts.
+# EmbeddingModel is @MockBean in integration tests — Ollama is not required at test time.
 spring:
   ai:
-    vectorstore:
-      pgvector:
-        initialize-schema: true
     ollama:
       base-url: http://localhost:11434

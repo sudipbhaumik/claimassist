@@ -95,6 +95,7 @@ public class IngestController {
             result.chunksCreated(),
             result.chunksCreated(),
             result.chunksSkipped(),
+            result.chunksEmbedded(),
             List.of(
                 new IngestResponse.DocResult(
                     result.sourceId(),
@@ -166,7 +167,8 @@ public class IngestController {
         failed);
 
     return ResponseEntity.ok(
-        new IngestResponse(pending.size(), totalCreated, totalCreated, totalSkipped, perDoc));
+        new IngestResponse(
+            pending.size(), totalCreated, totalCreated, totalSkipped, totalCreated, perDoc));
   }
 
   // -------------------------------------------------------------------------

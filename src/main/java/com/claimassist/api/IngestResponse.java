@@ -8,6 +8,7 @@ public record IngestResponse(
     int chunksCreated,
     int chunksStored,
     int duplicatesSkipped,
+    int chunksEmbedded,
     List<DocResult> perDoc) {
 
   /** Per-document breakdown within a batch response. */

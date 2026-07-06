@@ -24,8 +24,12 @@ spring:
           model: ${CLAIMASSIST_EMBED_MODEL:nomic-embed-text}
     vectorstore:
       pgvector:
-        # Schema initialization deferred to Stage 1 (explicit Flyway migration).
+        # Flyway owns the schema; PgVectorStore is bound read-only to document_chunks.
+        table-name: document_chunks
         initialize-schema: false
+        schema-validation: false
+        dimensions: 768
+        distance-type: COSINE_DISTANCE
 
 claimassist:
   model:
@@ -37,6 +41,9 @@ claimassist:
     min-chunk-size-chars: 50
     min-chunk-length-to-embed: 10
     max-num-chunks: 10000
+  embed:
+    batch-size: 20
+    expected-dimensions: 768
   retrieval:
     top-k: 5
     threshold: 0.0
