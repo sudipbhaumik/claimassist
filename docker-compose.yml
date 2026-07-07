@@ -7,12 +7,10 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: local
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/claimassist
-      SPRING_AI_OLLAMA_BASE_URL: http://ollama:11434
+      SPRING_AI_OLLAMA_BASE_URL: http://host.docker.internal:11434
     depends_on:
       postgres:
         condition: service_healthy
-      ollama:
-        condition: service_started
 
   postgres:
     image: pgvector/pgvector:pg16
@@ -31,13 +29,5 @@ services:
       retries: 10
       start_period: 10s
 
-  ollama:
-    image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama-models:/root/.ollama
-
 volumes:
   postgres-data:
-  ollama-models:
