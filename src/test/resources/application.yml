@@ -7,3 +7,10 @@ spring:
   ai:
     ollama:
       base-url: http://localhost:11434
+    vectorstore:
+      pgvector:
+        table-name: document_chunks
+        initialize-schema: false
+        schema-validation: false
+        dimensions: 768
+        distance-type: COSINE_DISTANCE
