@@ -1,8 +1,8 @@
 # Test-scoped overrides.
 # Testcontainers provides the real Postgres datasource via @ServiceConnection.
 # Flyway (V1–V4) owns all schema: pgvector extension, document_chunks, HNSW index.
-# PgVectorStore inherits initialize-schema: false from main application.yml — no schema conflicts.
-# EmbeddingModel is @MockBean in integration tests — Ollama is not required at test time.
+# EmbeddingModel and ChatModel are @MockitoBean in integration tests — Ollama not required at test time.
+# This file SHADOWS (does not merge with) src/main/resources/application.yml — duplicate every needed block.
 spring:
   ai:
     ollama:
@@ -14,3 +14,11 @@ spring:
         schema-validation: false
         dimensions: 768
         distance-type: COSINE_DISTANCE
+
+claimassist:
+  retrieval:
+    top-k: 5
+    threshold: 0.0
+  generation:
+    timeout-seconds: 60
+    system-prompt-location: classpath:prompts/system-prompt.st

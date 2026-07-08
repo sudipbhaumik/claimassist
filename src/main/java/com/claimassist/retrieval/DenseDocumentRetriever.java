@@ -18,15 +18,15 @@ import org.springframework.stereotype.Component;
  * Dense-only document retriever backed by PgVectorStore.
  *
  * <p>Implements {@link VectorStoreRetriever} — the 1.1.8 retriever interface (Spring AI 2.x renames
- * this to {@code DocumentRetriever}). Exposed as a bean so Stage 2's ContextAugmentationAdvisor
- * (a custom {@code BaseAdvisor}) can inject and call it directly.
+ * this to {@code DocumentRetriever}). Exposed as a bean so Stage 2's ContextAugmentationAdvisor (a
+ * custom {@code BaseAdvisor}) can inject and call it directly.
  *
  * <p>No filter expression, no fusion, no reranking in this increment. Stage 2 adds sparse + RRF
  * behind this same interface without touching the controller or advisor wiring.
  *
  * <p>Note: {@code PgVectorStore.doSimilaritySearch()} embeds the query text internally via its
- * injected {@code EmbeddingModel} — the same bean used during ingestion. No separate embed call
- * is needed before {@code similaritySearch()}.
+ * injected {@code EmbeddingModel} — the same bean used during ingestion. No separate embed call is
+ * needed before {@code similaritySearch()}.
  */
 @Component
 public class DenseDocumentRetriever implements VectorStoreRetriever {
@@ -47,8 +47,8 @@ public class DenseDocumentRetriever implements VectorStoreRetriever {
   }
 
   /**
-   * Core retrieval — implements the {@link VectorStoreRetriever} contract. Wraps
-   * {@code VectorStore.similaritySearch()} with latency + match-count metrics.
+   * Core retrieval — implements the {@link VectorStoreRetriever} contract. Wraps {@code
+   * VectorStore.similaritySearch()} with latency + match-count metrics.
    */
   @Override
   public List<Document> similaritySearch(SearchRequest request) {
@@ -68,20 +68,18 @@ public class DenseDocumentRetriever implements VectorStoreRetriever {
           results.size());
       return results;
     } catch (ClaimAssistException e) {
-      sample.stop(
-          Timer.builder("claimassist.ask.retrieval.latency").register(meterRegistry));
+      sample.stop(Timer.builder("claimassist.ask.retrieval.latency").register(meterRegistry));
       throw e;
     } catch (Exception e) {
-      sample.stop(
-          Timer.builder("claimassist.ask.retrieval.latency").register(meterRegistry));
+      sample.stop(Timer.builder("claimassist.ask.retrieval.latency").register(meterRegistry));
       throw new ClaimAssistException(
           ErrorCode.INTERNAL_ERROR, "Dense retrieval failed: " + e.getMessage(), e);
     }
   }
 
   /**
-   * Convenience entry point for the controller and the Stage 2 advisor. Builds a
-   * {@link SearchRequest} using config defaults, with an optional per-request {@code topK} override.
+   * Convenience entry point for the controller and the Stage 2 advisor. Builds a {@link
+   * SearchRequest} using config defaults, with an optional per-request {@code topK} override.
    */
   public List<Document> retrieve(String question, Integer topKOverride) {
     int topK = (topKOverride != null && topKOverride > 0) ? topKOverride : defaultTopK;

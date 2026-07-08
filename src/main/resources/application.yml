@@ -50,6 +50,9 @@ claimassist:
     rrf-k: 60
   guardrail:
     grounding-threshold: 0.8
+  generation:
+    timeout-seconds: 60
+    system-prompt-location: classpath:prompts/system-prompt.st
 
 management:
   endpoints:

@@ -19,6 +19,7 @@ public class ClaimAssistProperties {
   @Valid private Embed embed = new Embed();
   @Valid private Retrieval retrieval = new Retrieval();
   @Valid private Guardrail guardrail = new Guardrail();
+  @Valid private Generation generation = new Generation();
 
   public Model getModel() {
     return model;
@@ -58,6 +59,14 @@ public class ClaimAssistProperties {
 
   public void setGuardrail(Guardrail guardrail) {
     this.guardrail = guardrail;
+  }
+
+  public Generation getGeneration() {
+    return generation;
+  }
+
+  public void setGeneration(Generation generation) {
+    this.generation = generation;
   }
 
   public static class Model {
@@ -194,6 +203,27 @@ public class ClaimAssistProperties {
 
     public void setGroundingThreshold(double groundingThreshold) {
       this.groundingThreshold = groundingThreshold;
+    }
+  }
+
+  public static class Generation {
+    @Positive private int timeoutSeconds = 60;
+    @NotBlank private String systemPromptLocation = "classpath:prompts/system-prompt.st";
+
+    public int getTimeoutSeconds() {
+      return timeoutSeconds;
+    }
+
+    public void setTimeoutSeconds(int timeoutSeconds) {
+      this.timeoutSeconds = timeoutSeconds;
+    }
+
+    public String getSystemPromptLocation() {
+      return systemPromptLocation;
+    }
+
+    public void setSystemPromptLocation(String systemPromptLocation) {
+      this.systemPromptLocation = systemPromptLocation;
     }
   }
 }

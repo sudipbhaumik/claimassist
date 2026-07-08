@@ -32,7 +32,9 @@ class DenseDocumentRetrieverTest {
   void setUp() {
     vectorStore = mock(VectorStore.class);
     meterRegistry = new SimpleMeterRegistry();
-    retriever = new DenseDocumentRetriever(vectorStore, makeProps(DEFAULT_TOP_K, DEFAULT_THRESHOLD), meterRegistry);
+    retriever =
+        new DenseDocumentRetriever(
+            vectorStore, makeProps(DEFAULT_TOP_K, DEFAULT_THRESHOLD), meterRegistry);
   }
 
   @Test
@@ -90,7 +92,8 @@ class DenseDocumentRetrieverTest {
 
   @Test
   void retrieve_vectorStoreThrows_wrappedAsClaimAssistException() {
-    when(vectorStore.similaritySearch(any(SearchRequest.class))).thenThrow(new RuntimeException("DB connection lost"));
+    when(vectorStore.similaritySearch(any(SearchRequest.class)))
+        .thenThrow(new RuntimeException("DB connection lost"));
 
     assertThatThrownBy(() -> retriever.retrieve("question", null))
         .isInstanceOf(ClaimAssistException.class)
@@ -99,7 +102,8 @@ class DenseDocumentRetrieverTest {
 
   @Test
   void similaritySearch_delegatesToVectorStore() {
-    SearchRequest req = SearchRequest.builder().query("test").topK(3).similarityThreshold(0.5).build();
+    SearchRequest req =
+        SearchRequest.builder().query("test").topK(3).similarityThreshold(0.5).build();
     when(vectorStore.similaritySearch(req)).thenReturn(List.of());
 
     retriever.similaritySearch(req);

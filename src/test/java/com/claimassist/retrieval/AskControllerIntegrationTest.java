@@ -1,7 +1,7 @@
 package com.claimassist.retrieval;
 
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -16,6 +16,11 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.model.Generation;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.embedding.Embedding;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.embedding.EmbeddingResponse;
@@ -43,10 +48,10 @@ class AskControllerIntegrationTest {
   @Container @ServiceConnection
   static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("pgvector/pgvector:pg16");
 
-  // Must match claimassist.embed.expected-dimensions default
   private static final int DIMS = 768;
 
   @MockitoBean EmbeddingModel embeddingModel;
+  @MockitoBean ChatModel chatModel;
 
   @Autowired MockMvc mockMvc;
   @Autowired JdbcTemplate jdbc;
@@ -55,7 +60,6 @@ class AskControllerIntegrationTest {
   void setUp() {
     jdbc.execute("DELETE FROM document_chunks");
 
-    // Stub embedForResponse used by EmbeddingService during ingestion
     when(embeddingModel.embedForResponse(anyList()))
         .thenAnswer(
             invocation -> {
@@ -69,18 +73,23 @@ class AskControllerIntegrationTest {
               return new EmbeddingResponse(embeddings);
             });
 
-    // Stub embed(String) used by PgVectorStore.getQueryEmbedding() during similaritySearch.
-    // PgVectorStore calls EmbeddingModel.embed(String) — not embedForResponse — to embed the
-    // query text before executing the pgvector distance query.
     float[] queryVector = new float[DIMS];
     Arrays.fill(queryVector, 0.1f);
     when(embeddingModel.embed(anyString())).thenReturn(queryVector);
+
+    // Stub ChatModel so generation does not need a live Ollama instance
+    AssistantMessage msg = new AssistantMessage("The policy covers liability and vehicle damage.");
+    ChatResponse chatResponse = new ChatResponse(List.of(new Generation(msg)));
+    when(chatModel.call(any(Prompt.class))).thenReturn(chatResponse);
   }
 
   @Test
-  void ask_withIngestedContent_returnsMatches() throws Exception {
-    String content = ("This policy covers liability and vehicle damage for all registered vehicles. ").repeat(20);
-    ingest(content, "{\"claim_id\":\"CLM-ASK01\",\"doc_type\":\"policy\",\"source\":\"policy.txt\"}");
+  void ask_withIngestedContent_returnsGroundedAnswer() throws Exception {
+    String content =
+        ("This policy covers liability and vehicle damage for all registered vehicles. ")
+            .repeat(20);
+    ingest(
+        content, "{\"claim_id\":\"CLM-ASK01\",\"doc_type\":\"policy\",\"source\":\"policy.txt\"}");
 
     mockMvc
         .perform(
@@ -89,21 +98,22 @@ class AskControllerIntegrationTest {
                 .content("{\"question\":\"What does the policy cover?\"}"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.question").value("What does the policy cover?"))
-        .andExpect(jsonPath("$.matches").isArray())
-        .andExpect(jsonPath("$.count").value(greaterThanOrEqualTo(0)));
+        .andExpect(jsonPath("$.answer").isString())
+        .andExpect(jsonPath("$.citations").isArray())
+        .andExpect(jsonPath("$.usedFallback").value(false));
   }
 
   @Test
-  void ask_emptyStore_returnsEmptyMatchesNotAnError() throws Exception {
-    // No content ingested — clean state via @BeforeEach
+  void ask_emptyStore_returnsAnswerWithEmptyCitations() throws Exception {
     mockMvc
         .perform(
             post("/api/v1/ask")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"question\":\"What is covered?\"}"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.matches").isArray())
-        .andExpect(jsonPath("$.count").value(0));
+        .andExpect(jsonPath("$.answer").isString())
+        .andExpect(jsonPath("$.citations").isArray())
+        .andExpect(jsonPath("$.usedFallback").value(false));
   }
 
   @Test
@@ -119,17 +129,16 @@ class AskControllerIntegrationTest {
   @Test
   void ask_missingQuestion_returns400() throws Exception {
     mockMvc
-        .perform(
-            post("/api/v1/ask")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
+        .perform(post("/api/v1/ask").contentType(MediaType.APPLICATION_JSON).content("{}"))
         .andExpect(status().isBadRequest());
   }
 
   @Test
-  void ask_matchResultsHaveExpectedFields() throws Exception {
+  void ask_withIngestedContent_citationsContainSource() throws Exception {
     String content = ("Insurance policy with detailed coverage terms and exclusions. ").repeat(20);
-    ingest(content, "{\"claim_id\":\"CLM-ASK02\",\"doc_type\":\"policy\",\"source\":\"test.txt\",\"section\":\"Coverage\"}");
+    ingest(
+        content,
+        "{\"claim_id\":\"CLM-ASK02\",\"doc_type\":\"policy\",\"source\":\"test.txt\",\"section\":\"Coverage\"}");
 
     mockMvc
         .perform(
@@ -137,16 +146,16 @@ class AskControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"question\":\"coverage terms\"}"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.matches[0].content").exists())
-        .andExpect(jsonPath("$.matches[0].score").exists())
-        .andExpect(jsonPath("$.matches[0].source").value("test.txt"))
-        .andExpect(jsonPath("$.matches[0].docType").value("policy"));
+        .andExpect(jsonPath("$.citations[0].source").value("test.txt"))
+        .andExpect(jsonPath("$.citations[0].docType").value("policy"));
   }
 
   @Test
-  void ask_topKOverride_limitsResults() throws Exception {
-    String content = ("Detailed policy section covering various claim types and eligibility criteria. ").repeat(50);
-    ingest(content, "{\"claim_id\":\"CLM-ASK03\",\"doc_type\":\"policy\"}");
+  void ask_topKOverride_limitsRetrievedChunksAndCitations() throws Exception {
+    String content =
+        ("Detailed policy section covering various claim types and eligibility criteria. ")
+            .repeat(50);
+    ingest(content, "{\"claim_id\":\"CLM-ASK03\",\"doc_type\":\"policy\",\"source\":\"big.txt\"}");
 
     mockMvc
         .perform(
@@ -154,7 +163,7 @@ class AskControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"question\":\"policy details\",\"top_k\":2}"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.count").value(lessThanOrEqualTo(2)));
+        .andExpect(jsonPath("$.citations.length()").value(lessThanOrEqualTo(2)));
   }
 
   // -------------------------------------------------------------------------
