@@ -35,6 +35,6 @@ public class AskController {
 
     GenerationResult result = generationService.generate(req.question(), req.topK());
     return ResponseEntity.ok(
-        new AskResponse(req.question(), result.answer(), result.citations(), false));
+        new AskResponse(req.question(), result.answer(), result.citations(), result.usedFallback()));
   }
 }

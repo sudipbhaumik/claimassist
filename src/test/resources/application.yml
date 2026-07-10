@@ -19,6 +19,8 @@ claimassist:
   retrieval:
     top-k: 5
     threshold: 0.0
+  guardrail:
+    fallback-message: "I don't have enough information in the available documents to answer that question."
   generation:
     timeout-seconds: 60
     system-prompt-location: classpath:prompts/system-prompt.st

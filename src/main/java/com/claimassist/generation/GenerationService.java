@@ -2,6 +2,7 @@ package com.claimassist.generation;
 
 import com.claimassist.common.error.ClaimAssistException;
 import com.claimassist.common.error.ErrorCode;
+import com.claimassist.config.ClaimAssistProperties;
 import com.claimassist.retrieval.DenseDocumentRetriever;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
@@ -19,10 +20,14 @@ import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 
 /**
- * Orchestrates the generation step: retrieval via {@link ContextAugmentationAdvisor}, model call
- * via {@link ChatClient}, answer extraction, citation building, and metrics.
+ * Orchestrates the ask pipeline: retrieve → fallback gate → generate.
  *
- * <p>Provider abstraction: {@code ChatClient} only — no Ollama or other provider SDK is referenced.
+ * <p>The fallback gate is deterministic: if the retriever returns no chunks, or the top similarity
+ * score is below {@code claimassist.retrieval.threshold}, the model is NOT called and a safe
+ * configured message is returned immediately. This guarantees the model only runs on grounded
+ * context.
+ *
+ * <p>Provider abstraction: {@code ChatClient} only — no Ollama or other provider SDK referenced.
  */
 @Service
 public class GenerationService {
@@ -32,18 +37,27 @@ public class GenerationService {
   private final ChatClient chatClient;
   private final DenseDocumentRetriever retriever;
   private final MeterRegistry meterRegistry;
+  private final double threshold;
+  private final String fallbackMessage;
 
   public GenerationService(
-      ChatClient chatClient, DenseDocumentRetriever retriever, MeterRegistry meterRegistry) {
+      ChatClient chatClient,
+      DenseDocumentRetriever retriever,
+      MeterRegistry meterRegistry,
+      ClaimAssistProperties props) {
     this.chatClient = chatClient;
     this.retriever = retriever;
     this.meterRegistry = meterRegistry;
+    this.threshold = props.getRetrieval().getThreshold();
+    this.fallbackMessage = props.getGuardrail().getFallbackMessage();
   }
 
   /**
-   * Runs retrieval + generation for the given question and returns a grounded answer with citations
-   * derived from the retrieved chunks' metadata.
+   * Runs retrieval, applies the grounding fallback gate, then invokes the model only when
+   * sufficient context exists.
    *
+   * @return {@link GenerationResult} with {@code usedFallback=true} when the gate fired (no model
+   *     call); {@code usedFallback=false} with a grounded cited answer otherwise
    * @throws ClaimAssistException with {@code SERVICE_UNAVAILABLE} on model failure
    */
   public GenerationResult generate(String question, Integer topKOverride) {
@@ -53,8 +67,21 @@ public class GenerationService {
         requestId,
         question.substring(0, Math.min(80, question.length())));
 
-    ContextAugmentationAdvisor advisor =
-        new ContextAugmentationAdvisor(retriever, question, topKOverride);
+    List<Document> chunks = retriever.retrieve(question, topKOverride);
+
+    if (shouldFallback(chunks)) {
+      String qHash = Integer.toHexString(question.hashCode());
+      log.info(
+          "fallback fired requestId={} qHash={} chunks={} threshold={}",
+          requestId,
+          qHash,
+          chunks.size(),
+          threshold);
+      meterRegistry.counter("claimassist.ask.fallback").increment();
+      return new GenerationResult(fallbackMessage, Collections.emptyList(), true);
+    }
+
+    ContextAugmentationAdvisor advisor = new ContextAugmentationAdvisor(chunks);
     Timer.Sample sample = Timer.start(meterRegistry);
     try {
       ChatClientResponse ccResponse =
@@ -68,17 +95,17 @@ public class GenerationService {
       String answer = ccResponse.chatResponse().getResult().getOutput().getText();
 
       @SuppressWarnings("unchecked")
-      List<Document> chunks =
+      List<Document> responseChunks =
           (List<Document>)
               ccResponse
                   .context()
                   .getOrDefault(ContextAugmentationAdvisor.CHUNKS_KEY, Collections.emptyList());
 
-      List<Citation> citations = buildCitations(chunks);
+      List<Citation> citations = buildCitations(responseChunks);
       recordTokenUsage(ccResponse.chatResponse());
 
       log.debug("generation complete requestId={} citations={}", requestId, citations.size());
-      return new GenerationResult(answer, citations);
+      return new GenerationResult(answer, citations, false);
 
     } catch (ClaimAssistException e) {
       sample.stop(Timer.builder("claimassist.ask.latency").register(meterRegistry));
@@ -89,6 +116,23 @@ public class GenerationService {
       throw new ClaimAssistException(
           ErrorCode.SERVICE_UNAVAILABLE, "Generation service unavailable", e);
     }
+  }
+
+  /**
+   * Returns {@code true} when retrieval produced no usable context. With {@code threshold=0.0}
+   * (the default), this fires only on empty results — pgvector has already applied the same
+   * threshold filter. When {@code threshold > 0}, the score check is belt-and-suspenders against
+   * chunks that slipped through with null or borderline scores.
+   */
+  private boolean shouldFallback(List<Document> chunks) {
+    if (chunks.isEmpty()) return true;
+    double topScore =
+        chunks.stream()
+            .filter(c -> c.getScore() != null)
+            .mapToDouble(Document::getScore)
+            .max()
+            .orElse(0.0);
+    return topScore < threshold;
   }
 
   private List<Citation> buildCitations(List<Document> chunks) {

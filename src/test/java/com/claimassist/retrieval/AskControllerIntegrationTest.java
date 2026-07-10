@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -104,7 +106,8 @@ class AskControllerIntegrationTest {
   }
 
   @Test
-  void ask_emptyStore_returnsAnswerWithEmptyCitations() throws Exception {
+  void ask_emptyStore_usesFallback_modelNotInvoked() throws Exception {
+    // Empty store → retriever returns nothing → gate fires → model NOT called, usedFallback=true
     mockMvc
         .perform(
             post("/api/v1/ask")
@@ -113,7 +116,10 @@ class AskControllerIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.answer").isString())
         .andExpect(jsonPath("$.citations").isArray())
-        .andExpect(jsonPath("$.usedFallback").value(false));
+        .andExpect(jsonPath("$.citations").isEmpty())
+        .andExpect(jsonPath("$.usedFallback").value(true));
+
+    verify(chatModel, never()).call(any(org.springframework.ai.chat.prompt.Prompt.class));
   }
 
   @Test

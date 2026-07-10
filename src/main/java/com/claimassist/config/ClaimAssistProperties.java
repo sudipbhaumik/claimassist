@@ -197,12 +197,24 @@ public class ClaimAssistProperties {
     @DecimalMax("1.0")
     private double groundingThreshold = 0.8;
 
+    @NotBlank
+    private String fallbackMessage =
+        "I don't have enough information in the available documents to answer that question.";
+
     public double getGroundingThreshold() {
       return groundingThreshold;
     }
 
     public void setGroundingThreshold(double groundingThreshold) {
       this.groundingThreshold = groundingThreshold;
+    }
+
+    public String getFallbackMessage() {
+      return fallbackMessage;
+    }
+
+    public void setFallbackMessage(String fallbackMessage) {
+      this.fallbackMessage = fallbackMessage;
     }
   }
 

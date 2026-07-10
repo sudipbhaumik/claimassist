@@ -50,6 +50,7 @@ claimassist:
     rrf-k: 60
   guardrail:
     grounding-threshold: 0.8
+    fallback-message: "I don't have enough information in the available documents to answer that question."
   generation:
     timeout-seconds: 60
     system-prompt-location: classpath:prompts/system-prompt.st
