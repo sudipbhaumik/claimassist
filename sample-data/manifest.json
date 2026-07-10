@@ -12,7 +12,7 @@
     "policy_effective_date": "2025-06-01",
     "policy_expiry_date": "2026-06-01",
     "doc_date": "2025-06-01",
-    "section": null,
+    "section": "Coverage Terms",
     "version": "v1",
     "jurisdiction": "NY"
   },
@@ -46,7 +46,7 @@
     "policy_effective_date": "2025-06-01",
     "policy_expiry_date": "2026-06-01",
     "doc_date": "2026-02-12",
-    "section": null,
+    "section": "Liability",
     "version": "v1",
     "jurisdiction": "NY"
   },
@@ -63,7 +63,7 @@
     "policy_effective_date": "2025-05-15",
     "policy_expiry_date": "2026-02-14",
     "doc_date": "2025-05-15",
-    "section": null,
+    "section": "Exclusions",
     "version": "v1",
     "jurisdiction": "CA"
   },
@@ -97,7 +97,7 @@
     "policy_effective_date": "2025-05-15",
     "policy_expiry_date": "2026-02-14",
     "doc_date": "2026-02-14",
-    "section": null,
+    "section": "Collision",
     "version": "v1",
     "jurisdiction": "CA"
   },
@@ -114,7 +114,7 @@
     "policy_effective_date": "2025-09-01",
     "policy_expiry_date": "2026-09-01",
     "doc_date": "2025-09-01",
-    "section": null,
+    "section": "Deductibles",
     "version": "v1",
     "jurisdiction": "TX"
   },
@@ -148,7 +148,7 @@
     "policy_effective_date": "2025-09-01",
     "policy_expiry_date": "2026-09-01",
     "doc_date": "2026-03-18",
-    "section": null,
+    "section": "Claim History",
     "version": "v2-final",
     "jurisdiction": "TX"
   },
@@ -165,7 +165,7 @@
     "policy_effective_date": "2025-09-01",
     "policy_expiry_date": "2026-09-01",
     "doc_date": "2026-03-17",
-    "section": null,
+    "section": "Claim History",
     "version": "v1-draft",
     "jurisdiction": "TX"
   },
