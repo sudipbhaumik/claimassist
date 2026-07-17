@@ -6,6 +6,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -96,6 +97,8 @@ public class ClaimAssistProperties {
     @Positive private int minChunkSizeChars = 50;
     @Positive private int minChunkLengthToEmbed = 10;
     @Positive private int maxNumChunks = 10_000;
+    private List<String> structureAwareDocTypes = List.of("policy", "correspondence");
+    @Positive private int sectionHeadingMaxChars = 60;
 
     public int getSize() {
       return size;
@@ -135,6 +138,22 @@ public class ClaimAssistProperties {
 
     public void setMaxNumChunks(int maxNumChunks) {
       this.maxNumChunks = maxNumChunks;
+    }
+
+    public List<String> getStructureAwareDocTypes() {
+      return structureAwareDocTypes;
+    }
+
+    public void setStructureAwareDocTypes(List<String> structureAwareDocTypes) {
+      this.structureAwareDocTypes = structureAwareDocTypes;
+    }
+
+    public int getSectionHeadingMaxChars() {
+      return sectionHeadingMaxChars;
+    }
+
+    public void setSectionHeadingMaxChars(int sectionHeadingMaxChars) {
+      this.sectionHeadingMaxChars = sectionHeadingMaxChars;
     }
   }
 

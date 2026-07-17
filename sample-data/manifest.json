@@ -1,6 +1,6 @@
 [
   {
-    "file": "documents/CLM-1001/policy.txt",
+    "file": "documents/CLM-1001/policy.html",
     "claim_id": "CLM-1001",
     "policy_id": "POL-5501",
     "policyholder_id": "PH-9001",
@@ -12,7 +12,7 @@
     "policy_effective_date": "2025-06-01",
     "policy_expiry_date": "2026-06-01",
     "doc_date": "2025-06-01",
-    "section": "Coverage Terms",
+    "section": null,
     "version": "v1",
     "jurisdiction": "NY"
   },
@@ -63,7 +63,7 @@
     "policy_effective_date": "2025-05-15",
     "policy_expiry_date": "2026-02-14",
     "doc_date": "2025-05-15",
-    "section": "Exclusions",
+    "section": null,
     "version": "v1",
     "jurisdiction": "CA"
   },
@@ -114,7 +114,7 @@
     "policy_effective_date": "2025-09-01",
     "policy_expiry_date": "2026-09-01",
     "doc_date": "2025-09-01",
-    "section": "Deductibles",
+    "section": null,
     "version": "v1",
     "jurisdiction": "TX"
   },
